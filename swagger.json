@@ -1,0 +1,471 @@
+{
+    "swagger":"2.0",
+    "info": {
+        "description":"social media app",
+        "title":"Social media app"
+    },
+    "tags":[
+        {
+            "name":"USER"
+           
+        },
+        {
+            "name":"POST"
+        }
+    ],
+    "paths":{
+        "/users/register":{
+            "post":{
+                "tags":[
+                    "USER"
+                ],
+                "summary": "Registering a user  ",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "type":"object",
+                        "properties":{
+                            "username":{
+                                "type":"string",
+                                "required":true
+                                
+                            },
+                            "phone":{
+                                "type":"string",
+                                "required":true
+                                
+                            },
+                            "email":{
+                                "type":"string",
+                                "unique":true,
+                                "required":true
+                                
+                            },
+                            "password":{
+                                "type":"string",
+                                "required":true
+                                
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{
+                    "description":"Success"
+                },
+                "201":{
+                    "description":"Created"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+        },
+        "/users/login":{
+            "post":{
+                "tags":[
+                    "USER"
+                ],
+                "summary": "Login a user  ",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"body",
+                        "name":"body",
+                        "type":"object",
+                        "properties":{
+         
+                            "email":{
+                                "type":"string",
+                                "required":true
+                                
+                            },
+                            "password":{
+                                "type":"string",
+                                "required":true
+                                
+                            }
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{
+                    "description":"Success"
+                },
+                "201":{
+                    "description":"Created"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+        },
+        "/users/suggestions":{
+            "get":{
+                "tags":[
+                    "USER"
+                ],
+                "summary": "Get user suggestions",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"header",
+                        "name":"auth-token",
+                        "required":true,
+                        "description":"Token"
+ 
+                        }
+                    
+                ],
+                "responses":{
+                    "200":{
+                    "description":"Success"
+                },
+                "201":{
+                    "description":"Created"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+        },
+        "/users/update/{userId}": {
+            "put": {
+                "tags": [
+                    "USER"
+                ],
+                "summary": "Update account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "auth-token",
+                        "required": true,
+                        "description": "Token"
+                    },
+                    {
+                        "in":"path",
+                        "name":"userId",
+                        "description":"id of the user",
+                        "type":"string",
+                        "required":"true"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type" : "object",
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "phone": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "email": {
+                                "type": "string",
+                                "unique":true,
+                                "required":true
+                            },
+                            "password": {
+                                "type": "number",
+                                "required": true
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/delete/{userId}": {
+            "delete": {
+                "tags": [
+                    "USER"
+                ],
+                "summary": "delete an account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "auth-token",
+                        "required": true,
+                        "description": "Token"
+                    },
+                    {
+                        "in":"path",
+                        "name":"userId",
+                        "description":"id of the user",
+                        "type":"string",
+                        "required":"true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/posts/create": {
+            "post": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Create a new post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "auth-token",
+                        "required": true,
+                        "description": "Token"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type" : "object",
+                        "properties": {
+
+                            "title": {
+                                "type":"string",
+                                "required": true
+                            },
+                            "description": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "fileUrl": {
+                                "type": "string",
+                                "required": true
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/posts/update/{postId}": {
+            "put": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "Update a post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "auth-token",
+                        "required": true,
+                        "description": "Token"
+                    },
+                    {
+                        "in":"path",
+                        "name":"postId",
+                        "description":"id of the post",
+                        "type":"string",
+                        "required":"true"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type" : "object",
+                        "properties": {
+                            "title": {
+                                "type":"string",
+                                "required": true
+                            },
+                            "description": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "fileUrl": {
+                                "type": "string",
+                                "required": true
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/posts/delete/{postId}": {
+            "delete": {
+                "tags": [
+                    "POST"
+                ],
+                "summary": "delete a post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "auth-token",
+                        "required": true,
+                        "description": "Token"
+                    },
+                    {
+                        "in":"path",
+                        "name":"postId",
+                        "description":"id of the post",
+                        "type":"string",
+                        "required":"true"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/posts/":{
+            "get":{
+                "tags":[
+                    "POST"
+                ],
+                "summary": "Get all posts",
+                "consumes":[
+                    "application/json"
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "in":"header",
+                        "name":"auth-token",
+                        "required":true,
+                        "description":"Token"
+ 
+                        }
+                    
+                ],
+                "responses":{
+                    "200":{
+                    "description":"Success"
+                },
+                "201":{
+                    "description":"Created"
+                },
+                "400":{
+                    "description":"Invalid Data"
+                },
+                "500":{
+                    "description":"Internal server error"
+                }
+            }
+            }
+        }
+    }
+}
