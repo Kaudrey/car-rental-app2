@@ -1,43 +1,35 @@
-const mongoose =require("mongoose")
-const  Schema= mongoose.Schema
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'postgres'
+});
 
-const jsonwebtoken =require('jsonwebtoken')
-const {sign} = jsonwebtoken
-
-const userSchema = new Schema({
-    username:{
-        type:String,
-        required:true
-    },
-   
-    phone:{
-        type:String,
-        minLength: 10,
-        maxLength: 10,
-        required:true
-    },
-    email:{
-        type:String,
-        unique:true,
-        match: [/\S+@\S+\.\S+/, 'Email is invalid'],
-        required:true
-    },
-    password:{
-        type:String,
-        required:true,
-        select: false
+const User = sequelize.define('User', {
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [10, 10]
     }
-},
-{timestamps:true}
-)
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+}, {
+  timestamps: true
+});
 
-userSchema.methods.generateAuthToken = function(){
-    const token = sign(
-        {_id:this._id,role: this.role},
-        (process.env.JWT).trim()
-    )
-    return token;
-}
-
-const User = mongoose.model('Users',userSchema)
-module.exports=User
+module.exports = User;

@@ -1,27 +1,28 @@
-const mongoose = require("mongoose");
-const mongoosePaginate = require("mongoose-paginate-v2");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'postgres'
+});
 
-const postSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    fileUrl: {
-        type: String,
-        required: true,
-    },
-}, { timestamps: true });
+const Post = sequelize.define('Post', {
+  userId: {
+    type: DataTypes.UUID, // Assuming you use UUIDs as ObjectIds in MongoDB
+    allowNull: false,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  fileUrl: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+}, {
+  timestamps: true,
+});
 
-postSchema.plugin(mongoosePaginate);
-
-const Post = mongoose.model("Post", postSchema);
 module.exports = Post;
