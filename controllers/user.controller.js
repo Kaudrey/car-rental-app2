@@ -71,7 +71,6 @@ exports.updateUser = async (req, res) => {
     const { userId } = req.params;
     const { username, phone, email, password } = req.body;
 
-    // Hash the password if provided
     const hashedPassword = password ? await hash(password, 10) : null;
 
     const updatedUserResult = await pool.query(
@@ -96,8 +95,6 @@ exports.deleteUser = async (req, res) => {
   try {
     const authUserId = req.user._id;
     const { userId } = req.params;
-
-    // Check if the user to be deleted exists
     const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
     const user = userResult.rows[0];
 
@@ -105,14 +102,12 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the authenticated user has permission to delete
     if (authUserId !== userId) {
       return res
         .status(403)
         .json({ message: 'Permission denied. You can only delete your own account.' });
     }
 
-    // Delete associated posts and the user
     await pool.query('DELETE FROM posts WHERE user_id = $1', [userId]);
     await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 

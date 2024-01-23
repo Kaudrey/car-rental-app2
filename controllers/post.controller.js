@@ -1,4 +1,6 @@
 const Post = require("../models/post.model");
+const { Pool } = require('pg');
+const { Op } = require('sequelize');
 const {
     createSuccessResponse,
     errorResponse,
@@ -7,15 +9,12 @@ const {
 
 exports.createPost = async (req, res) => {
     try {
-        const userId = req.user._id; 
-        const { title, description, fileUrl } = req.body;
-
-        const post = new Post({
-            userId,
-            title,
-            description,
-            fileUrl,
-        });
+        const userId = req.user._id;
+        let createPostResult= await Pool.query(
+            'INSERT INTO posts(userId,title, description, fileUrl) VALUES($1, $2, $3) RETURNING *',
+            [userId,req.body.title,req.body.description,req.body.fileUrl]
+        ) ;
+        let post = createPostResult.rows[0];
 
         await post.save();
 
