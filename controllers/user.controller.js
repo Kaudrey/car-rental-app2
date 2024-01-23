@@ -49,7 +49,7 @@ exports.registerUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    let getUserResult = await pool.query('SELECT id, role, password FROM users WHERE email = $1', [req.body.email]);
+    let getUserResult = await pool.query('SELECT id,username,phone,email,password FROM users WHERE email = $1', [req.body.email]);
     let user = getUserResult.rows[0];
 
     if (!user) return errorResponse('Invalid email or password!', res);
@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
     const validPassword = await compare(req.body.password, user.password);
     if (!validPassword) return errorResponse('Invalid email or password!', res);
 
-    const token = jwt.sign({ _id: user.id, role: user.role }, process.env.JWT);
+    const token = jwt.sign({ _id: user.id}, process.env.JWT);
 
     return successResponse('Login successfully', { access_token: token }, res);
   } catch (ex) {
@@ -120,7 +120,7 @@ exports.deleteUser = async (req, res) => {
     res.status(200).json({ message: 'User and associated posts removed from the system' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error removing user and associated posts from the system' });
+    res.status(500).json({ message: 'Error removing user and associated posts from the system', error: error.message });
   }
 };
 
@@ -128,7 +128,7 @@ exports.getUserSuggestions = async (req, res) => {
   try {
     const authUserId = req.user.id;
     const suggestedUsersResult = await pool.query(
-      'SELECT id, username, created_at FROM users WHERE id != $1 LIMIT 5',
+      'SELECT id, username FROM users WHERE id != $1 LIMIT 5',
       [authUserId]
     );
     const suggestedUsers = suggestedUsersResult.rows;

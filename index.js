@@ -31,20 +31,6 @@ client.connect()
   .then(() => console.log(`Connected to the database ${database} successfully`))
   .catch(err => console.error("Error connecting to the database:", err));
 
-  // const pool = new Pool({
-  // host: process.env.HOST,
-  // user: process.env.DB_USER,
-  // port: process.env.DB_PORT,
-  // password: process.env.DB_PASS,
-  // database: process.env.DB_NAME, 
-
-  // })
-  // pool.query("INSERT INTO demo(id, name,age)values(8,'audrey',20)",(err,res)=>{
-  //   console.log(err,res)
-  //   pool.end
-
-  // })
-
 
 let PORT = process.env.PORT;
 app.listen(PORT, () => {
