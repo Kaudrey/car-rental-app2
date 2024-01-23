@@ -92,21 +92,12 @@ exports.updateUser = async (req, res) => {
 };
 
 
-// ... (remaining methods)
-
-// ... (previous code)
-
 exports.deleteUser = async (req, res) => {
   try {
-    const authUserId = req.user.id;
+    const authUserId = req.user._id;
     const { userId } = req.params;
 
-    if (authUserId !== userId) {
-      return res
-        .status(403)
-        .json({ message: 'Permission denied. You can only delete your own account.' });
-    }
-
+    // Check if the user to be deleted exists
     const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
     const user = userResult.rows[0];
 
@@ -114,6 +105,14 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Check if the authenticated user has permission to delete
+    if (authUserId !== userId) {
+      return res
+        .status(403)
+        .json({ message: 'Permission denied. You can only delete your own account.' });
+    }
+
+    // Delete associated posts and the user
     await pool.query('DELETE FROM posts WHERE user_id = $1', [userId]);
     await pool.query('DELETE FROM users WHERE id = $1', [userId]);
 
@@ -123,10 +122,9 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Error removing user and associated posts from the system', error: error.message });
   }
 };
-
 exports.getUserSuggestions = async (req, res) => {
   try {
-    const authUserId = req.user.id;
+    const authUserId = req.user._id;
     const suggestedUsersResult = await pool.query(
       'SELECT id, username FROM users WHERE id != $1 LIMIT 5',
       [authUserId]
@@ -136,6 +134,6 @@ exports.getUserSuggestions = async (req, res) => {
     res.status(200).json({ suggestions: suggestedUsers });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error getting user suggestions' });
+    res.status(500).json({ message: 'Error getting user suggestions', error: error.message });
   }
 };
