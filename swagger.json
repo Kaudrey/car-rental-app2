@@ -1,7 +1,7 @@
 {
     "swagger":"2.0",
     "info": {
-        "description":"social media app",
+        "description":"social media app using postgresql",
         "title":"Social media app"
     },
     "tags":[
